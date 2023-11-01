@@ -5,7 +5,7 @@ export type TUserDTO = {
 	registeredAt: string;
 };
 
-export type CreateUserDTO = {
+export type TCreateUserDTO = {
 	username: string;
 	name: string;
 	password: string;
