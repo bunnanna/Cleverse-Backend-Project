@@ -4,3 +4,9 @@ export type TUserDTO = {
 	name: string;
 	registeredAt: string;
 };
+
+export type CreateUserDTO = {
+	username: string;
+	name: string;
+	password: string;
+};
