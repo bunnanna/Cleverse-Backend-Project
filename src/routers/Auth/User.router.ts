@@ -8,10 +8,8 @@ const userRepo = new UserRepository(client);
 const authService = new AuthService(userRepo);
 const authController = new AuthController(authService);
 
-const authRouter = express.Router();
+const userRouter = express.Router();
 
-authRouter.post("/", authController.createUser);
-authRouter.post("/login", authController.login);
-authRouter.get("/me", authController.me);
+userRouter.post("/", authController.createUser);
 
-export default authRouter;
+export default userRouter;
