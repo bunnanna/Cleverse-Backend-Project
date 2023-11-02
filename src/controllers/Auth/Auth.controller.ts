@@ -1,5 +1,4 @@
 import { TAuthService } from "../../services/Auth";
-import { TUserLocal } from "../../types/user";
 import { TAuthController } from "./Auth.type";
 
 export default class AuthController implements TAuthController {
@@ -16,10 +15,8 @@ export default class AuthController implements TAuthController {
 		return res.status(200).json(credential).end();
 	};
 	me: TAuthController["me"] = async (req, res) => {
-		const local = res.locals;
-		console.log(local);
-
-		const user = await this.service.getMyDetail(local);
+		const { credential } = res.locals;
+		const user = await this.service.getMyDetail(credential);
 		return res.status(200).json(user).end();
 	};
 }

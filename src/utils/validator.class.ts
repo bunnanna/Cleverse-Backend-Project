@@ -19,12 +19,10 @@ class str {
 		return this.str;
 	}
 	toNum() {
-		try {
-			return +this.str;
-		} catch (error) {
-			if (error instanceof Error)
-				throw new Error(`${this.name} can not parse to number`);
-		}
+		const result = +this.str;
+
+		if (isNaN(result)) throw new Error(`${this.name} can not parse to number`);
+		return result;
 	}
 }
 
@@ -38,8 +36,10 @@ class num {
 		return this;
 	}
 	between(min: number, max?: number) {
-		if (this.num < min) throw new Error(`${this.name} less than ${min}`);
-		if (max && this.num > max) throw new Error(`${this.name} more than ${max}`);
+		if (this.num < min)
+			throw new Error(`${this.name} can not less than ${min}`);
+		if (max && this.num > max)
+			throw new Error(`${this.name} can not more than ${max}`);
 		return this;
 	}
 	value() {

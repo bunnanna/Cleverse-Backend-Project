@@ -1,6 +1,6 @@
 import { JWT_SECRET } from "../../configs";
 import { TUserRepository } from "../../repositories/User";
-import { TUserLocal } from "../../types/user";
+import { TCredential } from "../../types";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
 import {
 	Conflict409Error,
@@ -49,18 +49,20 @@ export default class AuthService implements TAuthService {
 		const user = await this.repo.getOneByUsername(validatedLoginBody.username);
 		if (!user) throw new Error("Invalid username or password");
 
-		if (!verifyPassword(validatedLoginBody.password, user.password)) {
+		if (!verifyPassword(password, user.password)) {
 			throw new Error("Invalid  password");
 		}
 		const accessToken = sign({ id: user.id }, JWT_SECRET!, {
 			algorithm: "HS512",
 			expiresIn: "2d",
+			issuer: "learnhub",
+			subject: "user-credential",
 		});
 		return { accessToken };
 	};
 
-	getMyDetail: TAuthService["getMyDetail"] = async (local: TUserLocal) => {
-		const id = local.user?.id;
+	getMyDetail: TAuthService["getMyDetail"] = async (credential) => {
+		const { id } = credential;
 		if (!id) throw new UnAuthorized401Error("UnAuthorized");
 
 		const user = await this.repo.getOne(id);

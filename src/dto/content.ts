@@ -12,10 +12,15 @@ export type TContentDTO = {
 	postBy: TUserDTO;
 };
 
-export type TContents = TContentDTO[];
+export type TContentsDTO = TContentDTO[];
 
 export type TCreateContentDTO = {
 	videoUrl: string;
+	comment: string;
+	rating: string;
+};
+
+export type TUpdateContentDTO = {
 	comment: string;
 	rating: string;
 };
