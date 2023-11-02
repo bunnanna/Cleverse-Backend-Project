@@ -1,5 +1,5 @@
 import { TAuthService } from "../../services/Auth";
-import { TUserLocal } from "../../types/user";
+import { TTokenData } from "../../types/user";
 import { TAuthController } from "./Auth.type";
 
 export default class AuthController implements TAuthController {
