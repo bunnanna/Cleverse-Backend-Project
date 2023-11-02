@@ -4,9 +4,7 @@ import { verify } from "jsonwebtoken";
 import { Forbidden403Error, UnAuthorized401Error } from "../utils/error.class";
 
 export default class JWTMiddleware {
-	constructor() {
-		if (!JWT_SECRET) throw new Error("JWT_SECRET is undifined");
-	}
+	constructor() {}
 
 	decode: RequestHandler = (req, res, next) => {
 		const AuthHeader = req.headers?.authorization;

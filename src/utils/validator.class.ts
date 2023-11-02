@@ -1,21 +1,25 @@
+export class ValidationError extends Error {
+	readonly statuscode: number = 400;
+}
 class str {
 	private str: string;
 	constructor(str: string, private name: string = "String") {
-		if (str !== "" && !str) throw new Error(`${this.name} required`);
+		if (str !== "" && !str) throw new ValidationError(`${this.name} required`);
 		this.str = `${str}`;
 		if (typeof this.str !== "string") {
-			throw new Error(`${this.name} is not string`);
+			throw new ValidationError(`${this.name} is not string`);
 		}
 	}
 	notEmpty() {
-		if (this.str.length === 0) throw new Error(`${this.name} is empty string`);
+		if (this.str.length === 0)
+			throw new ValidationError(`${this.name} is empty string`);
 		return this;
 	}
 	length(min: number, max?: number) {
 		if (this.str.length < min)
-			throw new Error(`${this.name} shorter than ${min}`);
+			throw new ValidationError(`${this.name} shorter than ${min}`);
 		if (max && this.str.length > max)
-			throw new Error(`${this.name} longer than ${max}`);
+			throw new ValidationError(`${this.name} longer than ${max}`);
 		return this;
 	}
 	value() {
@@ -24,7 +28,8 @@ class str {
 	toNum() {
 		const result = +this.str;
 
-		if (isNaN(result)) throw new Error(`${this.name} can not parse to number`);
+		if (isNaN(result))
+			throw new ValidationError(`${this.name} can not parse to number`);
 		return result;
 	}
 }
@@ -32,19 +37,20 @@ class str {
 class num {
 	private num: number;
 	constructor(num: number | string, private name: string = "Number") {
-		if (num !== 0 && !num) throw new Error(`${this.name} required`);
+		if (num !== 0 && !num) throw new ValidationError(`${this.name} required`);
 		this.num = +num;
-		if (isNaN(this.num)) throw new Error(`${this.name} is not number`);
+		if (isNaN(this.num))
+			throw new ValidationError(`${this.name} is not number`);
 	}
 	notZero() {
-		if (this.num === 0) throw new Error(`${this.name} can not be 0.`);
+		if (this.num === 0) throw new ValidationError(`${this.name} can not be 0.`);
 		return this;
 	}
 	between(min: number, max?: number) {
 		if (this.num < min)
-			throw new Error(`${this.name} can not less than ${min}`);
+			throw new ValidationError(`${this.name} can not less than ${min}`);
 		if (max && this.num > max)
-			throw new Error(`${this.name} can not more than ${max}`);
+			throw new ValidationError(`${this.name} can not more than ${max}`);
 		return this;
 	}
 	value() {
@@ -60,19 +66,19 @@ class date {
 	constructor(date: number | string | Date, private name: string = "Date") {
 		this.date = new Date(date);
 		if (this.date.toString() === "Invalid Date")
-			throw new Error(`${this.name} is invalid Date Format`);
+			throw new ValidationError(`${this.name} is invalid Date Format`);
 	}
 
 	before(date: Date) {
 		date = new Date(date);
 		if (this.date < date)
-			throw new Error(`${this.name} not come before ${date}`);
+			throw new ValidationError(`${this.name} not come before ${date}`);
 		return this;
 	}
 	after(date: Date) {
 		date = new Date(date);
 		if (this.date > date)
-			throw new Error(`${this.name} not come after ${date}`);
+			throw new ValidationError(`${this.name} not come after ${date}`);
 		return this;
 	}
 	value() {

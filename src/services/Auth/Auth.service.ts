@@ -3,6 +3,7 @@ import { TUserRepository } from "../../repositories/User";
 import { TCredential } from "../../types";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
 import {
+	BadRequest400Error,
 	Conflict409Error,
 	UnAuthorized401Error,
 } from "../../utils/error.class";
@@ -47,10 +48,10 @@ export default class AuthService implements TAuthService {
 				.value(),
 		};
 		const user = await this.repo.getOneByUsername(validatedLoginBody.username);
-		if (!user) throw new Error("Invalid username or password");
+		if (!user) throw new BadRequest400Error("Invalid username or password");
 
 		if (!verifyPassword(password, user.password)) {
-			throw new Error("Invalid  password");
+			throw new BadRequest400Error("Invalid username or password");
 		}
 		const accessToken = sign({ id: user.id }, JWT_SECRET!, {
 			algorithm: "HS512",
