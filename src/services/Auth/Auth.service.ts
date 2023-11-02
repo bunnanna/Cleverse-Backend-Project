@@ -2,7 +2,6 @@ import { JWT_SECRET } from "../../configs";
 import { TCreateUserDTO, TLoginDTO } from "../../dto";
 import { TUserRepository } from "../../repositories/User";
 import { TCredential } from "../../types";
-import { TLocal } from "../../types/user";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
 import {
 	Conflict409Error,
@@ -46,8 +45,6 @@ export default class AuthService implements TAuthService {
 		const user = await this.repo.getOneByUsername(username);
 		if (!user) throw new Error("Invalid username or password");
 
-		console.log(user);
-
 		if (!verifyPassword(password, user.password)) {
 			throw new Error("Invalid  password");
 		}
@@ -61,7 +58,7 @@ export default class AuthService implements TAuthService {
 	};
 
 	getMyDetail: TAuthService["getMyDetail"] = async (credential) => {
-		const id = credential.userId;
+		const { id } = credential;
 		if (!id) throw new UnAuthorized401Error("UnAuthorized");
 
 		const user = await this.repo.getOne(id);

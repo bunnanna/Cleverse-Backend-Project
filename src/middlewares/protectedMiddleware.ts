@@ -9,8 +9,9 @@ const authProtectMiddleware: RequestHandler<
 	unknown,
 	TLocalOrnull
 > = (req, res, next) => {
-	const { user } = res.locals;
-	if (!user) throw new UnAuthorized401Error("Unauthorized");
+	const { credential } = res.locals;
+
+	if (!credential) throw new UnAuthorized401Error("Unauthorized");
 	next();
 };
 export default authProtectMiddleware;

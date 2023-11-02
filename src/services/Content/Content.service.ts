@@ -21,19 +21,23 @@ export default class ContentService implements TContentService {
 	update: TContentService["update"] = async (
 		contentId,
 		updateBody,
-		accessToken
+		credential
 	) => {
 		const content = await this.repo.getOne(+contentId);
 		if (!content) throw new NotFound404Error("content not found");
-		if (content.ownerId !== accessToken.userId)
+		if (content.ownerId !== credential.id)
 			throw new Forbidden403Error("The content is not yours");
-		const updatedContent = await this.repo.update(+contentId, updateBody);
+		const { comment, rating } = updateBody;
+		const updatedContent = await this.repo.update(+contentId, {
+			comment,
+			rating: +rating,
+		});
 		return updatedContent;
 	};
-	delete: TContentService["delete"] = async (contentId, accessToken) => {
+	delete: TContentService["delete"] = async (contentId, credential) => {
 		const content = await this.repo.getOne(+contentId);
 		if (!content) throw new NotFound404Error("content not found");
-		if (content.ownerId !== accessToken.userId)
+		if (content.ownerId !== credential.id)
 			throw new Forbidden403Error("The content is not yours");
 		const deletedContent = await this.repo.delete(+contentId);
 		return deletedContent;

@@ -15,14 +15,14 @@ export default class ContentController implements TContentController {
 	update: TContentController["update"] = async (req, res) => {
 		const { id } = req.params;
 		const updateBody = req.body;
-		const { user } = res.locals;
-		const content = await this.service.update(id, updateBody, user);
+		const { credential } = res.locals;
+		const content = await this.service.update(id, updateBody, credential);
 		return res.status(200).json(content).end();
 	};
 	delete: TContentController["delete"] = async (req, res) => {
 		const { id } = req.params;
-		const { user } = res.locals;
-		const content = await this.service.delete(id, user);
+		const { credential } = res.locals;
+		const content = await this.service.delete(id, credential);
 		return res.status(200).json(content).end();
 	};
 }
