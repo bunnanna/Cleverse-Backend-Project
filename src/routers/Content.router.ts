@@ -1,0 +1,13 @@
+import express from "express";
+import ContentRepository from "../repositories/Content";
+import client from "../configs/db";
+import ContentService from "../services/Content";
+import ContentController from "../controllers/Content/Content.controller";
+
+const contentRepo = new ContentRepository(client);
+const contentService = new ContentService(contentRepo);
+const contentController = new ContentController(contentService);
+
+const contentRouter = express.Router();
+
+contentRouter;
