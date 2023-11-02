@@ -6,7 +6,7 @@ import { TCredential, TLocal } from "../../types";
 export type TContentController = {
 	getAll: RequestHandler<{}, TContent[]>;
 	getOne: RequestHandler<{ id: string }, TContent>;
-	// create: RequestHandler<{}, TContent, TCreateContentDTO, unknown, TLocal>;
+	create: RequestHandler<{}, TContent, TCreateContentDTO, unknown, TLocal>;
 	update: RequestHandler<
 		{ id: string },
 		TContent,

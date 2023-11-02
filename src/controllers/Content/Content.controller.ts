@@ -12,6 +12,12 @@ export default class ContentController implements TContentController {
 		const content = await this.service.getOne(id);
 		return res.status(200).json(content).end();
 	};
+	create: TContentController["create"] = async (req, res) => {
+		const { credential } = res.locals;
+		const createContentBody = req.body;
+		const newContent = await this.service.create(createContentBody, credential);
+		return res.status(201).json(newContent).end();
+	};
 	update: TContentController["update"] = async (req, res) => {
 		const { id } = req.params;
 		const updateBody = req.body;
