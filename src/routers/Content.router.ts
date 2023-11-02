@@ -12,8 +12,9 @@ const contentController = new ContentController(contentService);
 const contentRouter = express.Router();
 
 contentRouter.get("/", contentController.getAll);
+contentRouter.post("/", authProtectMiddleware, contentController.create);
 contentRouter.get("/:id", contentController.getOne);
 contentRouter.patch("/:id", authProtectMiddleware, contentController.update);
 contentRouter.delete("/:id", authProtectMiddleware, contentController.delete);
 
-contentRouter;
+export default contentRouter;
