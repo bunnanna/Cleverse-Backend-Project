@@ -2,7 +2,7 @@ export type TUserDTO = {
 	id: string;
 	username: string;
 	name: string;
-	registeredAt: string;
+	registeredAt: Date;
 };
 
 export type TCreateUserDTO = {

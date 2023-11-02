@@ -1,10 +1,20 @@
 import { PrismaClient } from "@prisma/client";
 import { TContentRepository } from "./Content.repo.type";
+import { TContent } from "../../types/content";
+import { TContentDTO } from "../../dto";
 
 export default class ContentRepository implements TContentRepository {
 	private readonly defaultquery = {
-		include: {
-			Owner: {
+		select: {
+			id: true,
+			videoTitle: true,
+			videoUrl: true,
+			comment: true,
+			rating: true,
+			thumbnailUrl: true,
+			creatorName: true,
+			creatorUrl: true,
+			postBy: {
 				select: {
 					id: true,
 					name: true,
@@ -12,8 +22,11 @@ export default class ContentRepository implements TContentRepository {
 					registeredAt: true,
 				},
 			},
+			createdAt: true,
+			updatedAt: true,
 		},
 	};
+
 	constructor(private prisma: PrismaClient) {}
 	getAll: TContentRepository["getAll"] = () => {
 		return this.prisma.content.findMany(this.defaultquery);
@@ -25,8 +38,14 @@ export default class ContentRepository implements TContentRepository {
 	create: TContentRepository["create"] = (contentBody) => {
 		const defaultquery = this.defaultquery;
 		const { ownerId, ...contentData } = contentBody;
+		const currentTime = new Date();
 		return this.prisma.content.create({
-			data: { ...contentData, Owner: { connect: { id: ownerId } } },
+			data: {
+				...contentData,
+				createdAt: currentTime,
+				updatedAt: currentTime,
+				postBy: { connect: { id: ownerId } },
+			},
 			...defaultquery,
 		});
 	};

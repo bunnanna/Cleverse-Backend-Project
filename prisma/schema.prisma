@@ -31,6 +31,6 @@ model Content {
   createdAt    DateTime @default(now()) @db.Timestamptz()
   updatedAt    DateTime @default(now()) @db.Timestamptz()
 
-  Owner   User   @relation(fields: [ownerId], references: [id])
+  postBy  User   @relation(fields: [ownerId], references: [id])
   ownerId String @db.Uuid()
 }

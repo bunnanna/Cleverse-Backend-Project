@@ -5,10 +5,10 @@ export type TContentDTO = {
 	videoTitle: string;
 	videoUrl: string;
 	comment: string;
-	rating: string;
+	rating: number;
 	thumbnailUrl: string;
-	creatorAt: string;
-	updatedAt: string;
+	createdAt: Date;
+	updatedAt: Date;
 	postBy: TUserDTO;
 };
 

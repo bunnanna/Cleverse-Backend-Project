@@ -1,18 +1,18 @@
-import { TCreateContentDTO, TUpdateContentDTO } from "../../dto";
+import { TContentDTO, TCreateContentDTO, TUpdateContentDTO } from "../../dto";
 import { TCredential } from "../../types";
 import { TContent, TCreateContent, TUpdateContent } from "../../types/content";
 
 export type TContentService = {
-	getAll: () => Promise<TContent[]>;
-	getOne: (contentId: string) => Promise<TContent>;
+	getAll: () => Promise<TContentDTO[]>;
+	getOne: (contentId: string) => Promise<TContentDTO>;
 	create: (
 		createBody: TCreateContentDTO,
 		credential: TCredential
-	) => Promise<TContent>;
+	) => Promise<TContentDTO>;
 	update: (
 		contentId: string,
 		updateBody: TUpdateContentDTO,
 		credential: TCredential
-	) => Promise<TContent>;
-	delete: (contentId: string, credential: TCredential) => Promise<TContent>;
+	) => Promise<TContentDTO>;
+	delete: (contentId: string, credential: TCredential) => Promise<TContentDTO>;
 };

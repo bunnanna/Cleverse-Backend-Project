@@ -54,14 +54,15 @@ export default class ContentService implements TContentService {
 			rating: new Validator.num(rating, "rating").between(0, 5).value(),
 			videoUrl: new Validator.str(videoUrl, "videoUrl").notEmpty().value(),
 		};
-		const videoData = await this.getVideoData(validatedCreateBody.videoUrl);
-		const currentTime = new Date();
+		const videoData = await this.getVideoData(
+			validatedCreateBody.videoUrl
+		).catch(() => {
+			throw new NotFound404Error("Cannot get Video Data");
+		});
 		const CreateContentData: TCreateContentData = {
 			...validatedCreateBody,
 			ownerId: credential.id,
 			...videoData,
-			createdAt: currentTime,
-			updatedAt: currentTime,
 		};
 
 		const newContent = await this.repo.create(CreateContentData);
@@ -75,12 +76,12 @@ export default class ContentService implements TContentService {
 		const contentIdNum = new Validator.num(contentId).value();
 		const content = await this.repo.getOne(contentIdNum);
 		if (!content) throw new NotFound404Error("content not found");
-		if (content.ownerId !== credential.id)
+		if (content.postBy.id !== credential.id)
 			throw new Forbidden403Error("The content is not yours");
 		const { comment, rating } = updateBody;
 		const updatedContent = await this.repo.update(contentIdNum, {
 			comment: new Validator.str(comment, "comment").value(),
-			rating: new Validator.num(rating).between(0, 5).value(),
+			rating: new Validator.num(rating, "rating").between(0, 5).value(),
 		});
 		return updatedContent;
 	};
@@ -88,7 +89,7 @@ export default class ContentService implements TContentService {
 		const validatedContentId = new Validator.str(contentId).length(1).toNum();
 		const content = await this.repo.getOne(validatedContentId);
 		if (!content) throw new NotFound404Error("content not found");
-		if (content.ownerId !== credential.id)
+		if (content.postBy.id !== credential.id)
 			throw new Forbidden403Error("The content is not yours");
 		const deletedContent = await this.repo.delete(validatedContentId);
 		return deletedContent;
