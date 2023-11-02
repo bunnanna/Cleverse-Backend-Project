@@ -1,5 +1,8 @@
 class str {
-	constructor(private str: string, private name: string = "String") {
+	private str: string;
+	constructor(str: string, private name: string = "String") {
+		if (str !== "" && !str) throw new Error(`${this.name} required`);
+		this.str = `${str}`;
 		if (typeof this.str !== "string") {
 			throw new Error(`${this.name} is not string`);
 		}
@@ -27,9 +30,11 @@ class str {
 }
 
 class num {
-	constructor(private num: number, private name: string = "Number") {
-		if (typeof this.num !== "number")
-			throw new Error(`${this.name} is not number`);
+	private num: number;
+	constructor(num: number | string, private name: string = "Number") {
+		if (num !== 0 && !num) throw new Error(`${this.name} required`);
+		this.num = +num;
+		if (isNaN(this.num)) throw new Error(`${this.name} is not number`);
 	}
 	notZero() {
 		if (this.num === 0) throw new Error(`${this.name} can not be 0.`);

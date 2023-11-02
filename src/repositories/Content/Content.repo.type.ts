@@ -6,9 +6,9 @@ import {
 } from "../../types/content";
 
 export type TContentRepository = {
-	getAll: () => Promise<TContent[]>;
-	getOne: (id: number) => Promise<TContent | null>;
-	create: (contentBody: TCreateContentData) => Promise<TContent>;
-	update: (id: number, updateBody: TUpdateContent) => Promise<TContent>;
-	delete: (id: number) => Promise<TContent>;
+	getAll: () => Promise<TContentDTO[]>;
+	getOne: (id: number) => Promise<TContentDTO | null>;
+	create: (contentBody: TCreateContentData) => Promise<TContentDTO>;
+	update: (id: number, updateBody: TUpdateContent) => Promise<TContentDTO>;
+	delete: (id: number) => Promise<TContentDTO>;
 };

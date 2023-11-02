@@ -4,19 +4,19 @@ import { TContent, TUpdateContent } from "../../types/content";
 import { TCredential, TLocal } from "../../types";
 
 export type TContentController = {
-	getAll: RequestHandler<{}, TContent[]>;
-	getOne: RequestHandler<{ id: string }, TContent>;
-	// create: RequestHandler<{}, TContent, TCreateContentDTO, unknown, TLocal>;
+	getAll: RequestHandler<{}, TContentDTO[]>;
+	getOne: RequestHandler<{ id: string }, TContentDTO>;
+	create: RequestHandler<{}, TContentDTO, TCreateContentDTO, unknown, TLocal>;
 	update: RequestHandler<
 		{ id: string },
-		TContent,
+		TContentDTO,
 		TUpdateContentDTO,
 		unknown,
 		TLocal
 	>;
 	delete: RequestHandler<
 		{ id: string },
-		TContent,
+		TContentDTO,
 		TCreateContentDTO,
 		unknown,
 		TLocal
