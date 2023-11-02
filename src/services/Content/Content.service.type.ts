@@ -5,14 +5,14 @@ import { TContent, TCreateContent, TUpdateContent } from "../../types/content";
 export type TContentService = {
 	getAll: () => Promise<TContent[]>;
 	getOne: (contentId: string) => Promise<TContent>;
-	// create: (
-	// 	createBody: TCreateContent,
-	// 	accessToken: string
-	// ) => Promise<TContent>;
+	create: (
+		createBody: TCreateContent,
+		credential: TCredential
+	) => Promise<TContent>;
 	update: (
 		contentId: string,
 		updateBody: TUpdateContentDTO,
-		accessToken: TCredential
+		credential: TCredential
 	) => Promise<TContent>;
-	delete: (contentId: string, accessToken: TCredential) => Promise<TContent>;
+	delete: (contentId: string, credential: TCredential) => Promise<TContent>;
 };

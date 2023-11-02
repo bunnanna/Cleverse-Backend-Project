@@ -24,13 +24,17 @@ export default class ContentRepository implements TContentRepository {
 	};
 	create: TContentRepository["create"] = (contentBody) => {
 		const defaultquery = this.defaultquery;
-		return this.prisma.content.create({ data: contentBody, ...defaultquery });
+		const { ownerId, ...contentData } = contentBody;
+		return this.prisma.content.create({
+			data: { ...contentData, Owner: { connect: { id: ownerId } } },
+			...defaultquery,
+		});
 	};
 	update: TContentRepository["update"] = (id, updateBody) => {
 		const defaultquery = this.defaultquery;
 		return this.prisma.content.update({
 			where: { id },
-			data: updateBody,
+			data: { ...updateBody, updatedAt: new Date() },
 			...defaultquery,
 		});
 	};

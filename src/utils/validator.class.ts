@@ -27,7 +27,9 @@ class str {
 }
 
 class num {
-	constructor(private num: number, private name: string = "Number") {
+	private num: number;
+	constructor(num: number | string, private name: string = "Number") {
+		this.num = +num;
 		if (typeof this.num !== "number")
 			throw new Error(`${this.name} is not number`);
 	}
