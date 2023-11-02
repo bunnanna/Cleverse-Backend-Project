@@ -1,6 +1,5 @@
 import { PrismaClient } from "@prisma/client";
 import { TContentRepository } from "./Content.repo.type";
-import { TContent } from "../../types/content";
 
 export default class ContentRepository implements TContentRepository {
 	private readonly defaultquery = {

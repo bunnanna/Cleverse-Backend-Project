@@ -19,3 +19,8 @@ export type TCreateContentDTO = {
 	comment: string;
 	rating: string;
 };
+
+export type TUpdateContentDTO = {
+	comment: string;
+	rating: string;
+};

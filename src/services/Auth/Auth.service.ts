@@ -1,7 +1,7 @@
 import { JWT_SECRET } from "../../configs";
 import { TCreateUserDTO, TLoginDTO } from "../../dto";
 import { TUserRepository } from "../../repositories/User";
-import { TTokenData } from "../../types/user";
+import { TLocal } from "../../types/user";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
 import {
 	Conflict409Error,
@@ -57,7 +57,7 @@ export default class AuthService implements TAuthService {
 		return { accessToken };
 	};
 
-	getMyDetail: TAuthService["getMyDetail"] = async (local: TTokenData) => {
+	getMyDetail: TAuthService["getMyDetail"] = async (local: TLocal) => {
 		const id = local.user?.id;
 		if (!id) throw new UnAuthorized401Error("UnAuthorized");
 

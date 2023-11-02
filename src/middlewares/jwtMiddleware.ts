@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { JWT_SECRET } from "../configs";
 import { verify } from "jsonwebtoken";
 import { Forbidden403Error, UnAuthorized401Error } from "../utils/error.class";
-import { TTokenData } from "../types/user";
+import { TLocal } from "../types/user";
 
 export default class JWTMiddleware {
 	constructor() {
