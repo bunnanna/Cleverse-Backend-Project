@@ -1,6 +1,7 @@
 import { JWT_SECRET } from "../../configs";
 import { TCreateUserDTO, TLoginDTO } from "../../dto";
 import { TUserRepository } from "../../repositories/User";
+import { TCredential } from "../../types";
 import { TLocal } from "../../types/user";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
 import {
@@ -53,12 +54,14 @@ export default class AuthService implements TAuthService {
 		const accessToken = sign({ id: user.id }, JWT_SECRET!, {
 			algorithm: "HS512",
 			expiresIn: "2d",
+			issuer: "learnhub",
+			subject: "user-credential",
 		});
 		return { accessToken };
 	};
 
-	getMyDetail: TAuthService["getMyDetail"] = async (local: TLocal) => {
-		const id = local.user?.id;
+	getMyDetail: TAuthService["getMyDetail"] = async (credential) => {
+		const id = credential.userId;
 		if (!id) throw new UnAuthorized401Error("UnAuthorized");
 
 		const user = await this.repo.getOne(id);

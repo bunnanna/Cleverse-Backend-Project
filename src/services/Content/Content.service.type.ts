@@ -1,5 +1,5 @@
 import { TUpdateContentDTO } from "../../dto";
-import { TaccessToken } from "../../types";
+import { TCredential } from "../../types";
 import { TContent, TCreateContent, TUpdateContent } from "../../types/content";
 
 export type TContentService = {
@@ -12,7 +12,7 @@ export type TContentService = {
 	update: (
 		contentId: string,
 		updateBody: TUpdateContentDTO,
-		accessToken: TaccessToken
+		accessToken: TCredential
 	) => Promise<TContent>;
-	delete: (contentId: string, accessToken: TaccessToken) => Promise<TContent>;
+	delete: (contentId: string, accessToken: TCredential) => Promise<TContent>;
 };

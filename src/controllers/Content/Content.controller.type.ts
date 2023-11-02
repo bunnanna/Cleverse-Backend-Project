@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { TContentDTO, TCreateContentDTO, TUpdateContentDTO } from "../../dto";
 import { TContent, TUpdateContent } from "../../types/content";
-import { TLocal } from "../../types/user";
+import { TCredential, TLocal } from "../../types";
 
 export type TContentController = {
 	getAll: RequestHandler<{}, TContent[]>;

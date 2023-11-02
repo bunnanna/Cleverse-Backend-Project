@@ -1,5 +1,4 @@
 import { TContentRepository } from "../../repositories/Content";
-import { TCreateContent, TContent, TUpdateContent } from "../../types/content";
 import { Forbidden403Error, NotFound404Error } from "../../utils/error.class";
 import { TContentService } from "./Content.service.type";
 
@@ -28,7 +27,7 @@ export default class ContentService implements TContentService {
 		if (!content) throw new NotFound404Error("content not found");
 		if (content.ownerId !== accessToken.userId)
 			throw new Forbidden403Error("The content is not yours");
-		const updatedContent = await this.repo.update(contentId, updateBody);
+		const updatedContent = await this.repo.update(+contentId, updateBody);
 		return updatedContent;
 	};
 	delete: TContentService["delete"] = async (contentId, accessToken) => {
@@ -36,7 +35,7 @@ export default class ContentService implements TContentService {
 		if (!content) throw new NotFound404Error("content not found");
 		if (content.ownerId !== accessToken.userId)
 			throw new Forbidden403Error("The content is not yours");
-		const deletedContent = await this.repo.delete(contentId);
+		const deletedContent = await this.repo.delete(+contentId);
 		return deletedContent;
 	};
 }
