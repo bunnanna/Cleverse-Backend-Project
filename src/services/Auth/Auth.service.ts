@@ -1,5 +1,4 @@
 import { JWT_SECRET } from "../../configs";
-import { TCreateUserDTO, TLoginDTO } from "../../dto";
 import { TUserRepository } from "../../repositories/User";
 import { TCredential } from "../../types";
 import { hashPassword, verifyPassword } from "../../utils/bcrypt";
@@ -7,21 +6,24 @@ import {
 	Conflict409Error,
 	UnAuthorized401Error,
 } from "../../utils/error.class";
+import Validator from "../../utils/validator.class";
 import { TAuthService } from "./Auth.type";
 import { sign } from "jsonwebtoken";
 export default class AuthService implements TAuthService {
 	constructor(private repo: TUserRepository) {}
-	private validateCreateUser = (createUserData: TCreateUserDTO) => {
-		const { name, username, password } = createUserData;
-		if (!name || name.length === 0) throw new Error("name field required");
-		if (!username || username.length === 0)
-			throw new Error("username field required");
-		if (!password || password.length === 0)
-			throw new Error("password field required");
-		return { name, username, password: hashPassword(password) };
-	};
+
 	createUser: TAuthService["createUser"] = async (createUserData) => {
-		const validatedUserData = this.validateCreateUser(createUserData);
+		const { name, username, password } = createUserData;
+		const validatedUserData = {
+			name: new Validator.str(name, "name").notEmpty().length(0).value(),
+			username: new Validator.str(username, "username")
+				.notEmpty()
+				.length(0)
+				.value(),
+			password: hashPassword(
+				new Validator.str(password, "password").notEmpty().length(0).value()
+			),
+		};
 		const duplicate = await this.repo.getOneByUsername(
 			validatedUserData.username
 		);
@@ -32,17 +34,19 @@ export default class AuthService implements TAuthService {
 		return newUser;
 	};
 
-	private validateLogin = (loginBody: TLoginDTO) => {
-		const { username, password } = loginBody;
-		if (!username || username.length === 0)
-			throw new Error("username field required");
-		if (!password || password.length === 0)
-			throw new Error("password field required");
-		return { username, password };
-	};
 	login: TAuthService["login"] = async (loginBody) => {
-		const { username, password } = this.validateLogin(loginBody);
-		const user = await this.repo.getOneByUsername(username);
+		const { username, password } = loginBody;
+		const validatedLoginBody = {
+			username: new Validator.str(username, "username")
+				.notEmpty()
+				.length(0)
+				.value(),
+			password: new Validator.str(password, "password")
+				.notEmpty()
+				.length(0)
+				.value(),
+		};
+		const user = await this.repo.getOneByUsername(validatedLoginBody.username);
 		if (!user) throw new Error("Invalid username or password");
 
 		if (!verifyPassword(password, user.password)) {
