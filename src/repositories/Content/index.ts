@@ -1,4 +1,4 @@
-import ContentRepository from "./Content.repo";
+import ContentRepository from './Content.repo'
 
-export * from "./Content.repo.type";
-export default ContentRepository;
+export * from './Content.repo.type'
+export default ContentRepository

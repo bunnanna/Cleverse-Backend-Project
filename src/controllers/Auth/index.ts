@@ -1,4 +1,4 @@
-import AuthController from "./Auth.controller";
+import AuthController from './Auth.controller'
 
-export * from "./Auth.type";
-export default AuthController;
+export * from './Auth.type'
+export default AuthController

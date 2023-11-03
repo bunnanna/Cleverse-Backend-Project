@@ -1,22 +1,22 @@
-import { RequestHandler } from "express";
-import { JWT_SECRET } from "../configs";
-import { verify } from "jsonwebtoken";
-import { Forbidden403Error, UnAuthorized401Error } from "../utils/error.class";
+import { RequestHandler } from 'express'
+import { verify } from 'jsonwebtoken'
+import { JWT_SECRET } from '../configs'
+import { Forbidden403Error } from '../utils/error.class'
 
 export default class JWTMiddleware {
-	constructor() {}
+  constructor() {}
 
-	decode: RequestHandler = (req, res, next) => {
-		const AuthHeader = req.headers?.authorization;
-		if (!AuthHeader) return next();
-		const token = AuthHeader.replace("Bearer ", "");
+  decode: RequestHandler = (req, res, next) => {
+    const AuthHeader = req.headers?.authorization
+    if (!AuthHeader) return next()
+    const token = AuthHeader.replace('Bearer ', '')
 
-		try {
-			const userTokenData = verify(token, JWT_SECRET!);
-			res.locals = { credential: userTokenData };
-			next();
-		} catch (error) {
-			if (error instanceof Error) throw new Forbidden403Error(error.message);
-		}
-	};
+    try {
+      const userTokenData = verify(token, JWT_SECRET!)
+      res.locals = { credential: userTokenData }
+      next()
+    } catch (error) {
+      if (error instanceof Error) throw new Forbidden403Error(error.message)
+    }
+  }
 }
