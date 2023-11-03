@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { TUser } from '../../types/user'
+import { TUser } from '../../types'
 type TCreateUser = {
   username: string
   name: string

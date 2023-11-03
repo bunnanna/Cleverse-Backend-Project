@@ -1,7 +1,6 @@
 import { RequestHandler } from 'express'
-import { verify } from 'jsonwebtoken'
-import { JWT_SECRET } from '../configs'
-import { Forbidden403Error } from '../utils/error.class'
+import { verifyJWT } from '../utils'
+import { Forbidden403Error } from '../utils/error'
 
 export default class JWTMiddleware {
   constructor() {}
@@ -12,7 +11,7 @@ export default class JWTMiddleware {
     const token = AuthHeader.replace('Bearer ', '')
 
     try {
-      const userTokenData = verify(token, JWT_SECRET!)
+      const userTokenData = verifyJWT(token)
       res.locals = { credential: userTokenData }
       next()
     } catch (error) {

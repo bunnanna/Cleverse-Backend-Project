@@ -1,7 +1,7 @@
 import { ErrorRequestHandler, Response } from 'express'
 import { TErrorDTO } from '../dto'
-import { HttpCodeError } from '../utils/error.class'
-import { ValidationError } from '../utils/validator.class'
+import { HttpCodeError } from '../utils/error'
+import { ValidationError } from '../utils/validator'
 
 export default class ErrorHandler {
   httpErrorHandler: ErrorRequestHandler = (err: Error, req, res: Response<TErrorDTO>, next) => {

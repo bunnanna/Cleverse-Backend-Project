@@ -1,4 +1,5 @@
 export abstract class HttpCodeError extends Error {
+  readonly name: string = 'UnknownError'
   readonly statuscode: number = 500
 }
 

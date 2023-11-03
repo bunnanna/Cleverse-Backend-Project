@@ -1,40 +1,16 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+import { SELECT_CONTENT } from '../../configs'
 import { TContentRepository } from './Content.repo.type'
 
 export default class ContentRepository implements TContentRepository {
-  private readonly defaultquery: { select: Prisma.ContentSelect } = {
-    select: {
-      id: true,
-      videoTitle: true,
-      videoUrl: true,
-      comment: true,
-      rating: true,
-      thumbnailUrl: true,
-      creatorName: true,
-      creatorUrl: true,
-      postBy: {
-        select: {
-          id: true,
-          name: true,
-          username: true,
-          registeredAt: true,
-        },
-      },
-      createdAt: true,
-      updatedAt: true,
-    },
-  }
-
   constructor(private prisma: PrismaClient) {}
   getAll: TContentRepository['getAll'] = () => {
-    return this.prisma.content.findMany(this.defaultquery)
+    return this.prisma.content.findMany({ select: SELECT_CONTENT })
   }
   getOne: TContentRepository['getOne'] = (id) => {
-    const defaultquery = this.defaultquery
-    return this.prisma.content.findUnique({ ...defaultquery, where: { id } })
+    return this.prisma.content.findUnique({ select: SELECT_CONTENT, where: { id } })
   }
   create: TContentRepository['create'] = (contentBody) => {
-    const defaultquery = this.defaultquery
     const { ownerId, ...contentData } = contentBody
     const currentTime = new Date()
     return this.prisma.content.create({
@@ -44,19 +20,17 @@ export default class ContentRepository implements TContentRepository {
         updatedAt: currentTime,
         postBy: { connect: { id: ownerId } },
       },
-      ...defaultquery,
+      select: SELECT_CONTENT,
     })
   }
   update: TContentRepository['update'] = (id, updateBody) => {
-    const defaultquery = this.defaultquery
     return this.prisma.content.update({
       where: { id },
       data: { ...updateBody, updatedAt: new Date() },
-      ...defaultquery,
+      select: SELECT_CONTENT,
     })
   }
   delete: TContentRepository['delete'] = (id) => {
-    const defaultquery = this.defaultquery
-    return this.prisma.content.delete({ where: { id }, ...defaultquery })
+    return this.prisma.content.delete({ where: { id }, select: SELECT_CONTENT })
   }
 }

@@ -1,7 +1,8 @@
 export class ValidationError extends Error {
+  readonly name: string = 'ValidationError'
   readonly statuscode: number = 400
 }
-class str {
+export class Validatestr {
   private str: string
   constructor(str: string, private name: string = 'String') {
     if (str !== '' && !str) throw new ValidationError(`${this.name} required`)
@@ -30,7 +31,7 @@ class str {
   }
 }
 
-class num {
+export class Validatenum {
   private num: number
   constructor(num: number | string, private name: string = 'Number') {
     if (num !== 0 && !num) throw new ValidationError(`${this.name} required`)
@@ -54,7 +55,7 @@ class num {
   }
 }
 
-class date {
+export class Validatedate {
   private date: Date
   constructor(date: number | string | Date, private name: string = 'Date') {
     this.date = new Date(date)
@@ -75,6 +76,3 @@ class date {
     return this.date
   }
 }
-
-const Validator = { str, num, date }
-export default Validator
