@@ -1,3 +1,4 @@
+import cors from 'cors'
 import express from 'express'
 import 'express-async-errors'
 import { PORT } from './configs'
@@ -11,6 +12,7 @@ const app = express()
 const errorHandler = new ErrorHandler()
 const jwtMiddleware = new JWTMiddleware()
 app.use(express.json())
+app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(jwtMiddleware.decode)
 app.use('/user', userRouter)
 app.use('/auth', authRouter)

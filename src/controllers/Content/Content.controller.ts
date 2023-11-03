@@ -5,7 +5,7 @@ export default class ContentController implements TContentController {
   constructor(private service: TContentService) {}
   getAll: TContentController['getAll'] = async (req, res) => {
     const contents = await this.service.getAll()
-    return res.status(200).json(contents)
+    return res.status(200).json(contents).end()
   }
   getOne: TContentController['getOne'] = async (req, res) => {
     const { id } = req.params
