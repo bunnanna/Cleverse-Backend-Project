@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { TContentRepository } from './Content.repo.type'
 
 export default class ContentRepository implements TContentRepository {
-  private readonly defaultquery = {
+  private readonly defaultquery: { select: Prisma.ContentSelect } = {
     select: {
       id: true,
       videoTitle: true,
