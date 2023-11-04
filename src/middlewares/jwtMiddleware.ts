@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
+import { Forbidden403Error } from '../configs/error'
 import { verifyJWT } from '../utils'
-import { Forbidden403Error } from '../utils/error'
 
 export default class JWTMiddleware {
   constructor() {}

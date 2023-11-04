@@ -5,29 +5,20 @@ export class ValidationError extends Error {
 export class Validatestr {
   private str: string
   constructor(str: string, private name: string = 'String') {
-    if (str !== '' && !str) throw new ValidationError(`${this.name} required`)
+    if (str !== '' && !str) throw new ValidationError(`${this.name} field is required`)
     this.str = `${str}`
-    if (typeof this.str !== 'string') {
-      throw new ValidationError(`${this.name} is not string`)
-    }
   }
   notEmpty() {
-    if (this.str.length === 0) throw new ValidationError(`${this.name} is empty string`)
+    if (this.str.length === 0) throw new ValidationError(`${this.name} can not be empty.`)
     return this
   }
   length(min: number, max?: number) {
-    if (this.str.length < min) throw new ValidationError(`${this.name} shorter than ${min}`)
-    if (max && this.str.length > max) throw new ValidationError(`${this.name} longer than ${max}`)
+    if (this.str.length < min) throw new ValidationError(`${this.name} can not shorter than ${min}`)
+    if (max && this.str.length > max) throw new ValidationError(`${this.name} can not longer than ${max}`)
     return this
   }
   value() {
     return this.str
-  }
-  toNum() {
-    const result = +this.str
-
-    if (isNaN(result)) throw new ValidationError(`${this.name} can not parse to number`)
-    return result
   }
 }
 
@@ -36,7 +27,6 @@ export class Validatenum {
   constructor(num: number | string, private name: string = 'Number') {
     if (num !== 0 && !num) throw new ValidationError(`${this.name} required`)
     this.num = +num
-    if (isNaN(this.num)) throw new ValidationError(`${this.name} is not number`)
   }
   notZero() {
     if (this.num === 0) throw new ValidationError(`${this.name} can not be 0.`)

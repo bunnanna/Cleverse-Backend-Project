@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express'
+import { UnAuthorized401Error } from '../configs/error'
 import { TLocalOrnull } from '../types'
-import { UnAuthorized401Error } from '../utils/error'
 
 export default class AuthProtectMiddleware {
   hasCredential: RequestHandler<unknown, unknown, unknown, unknown, TLocalOrnull> = (req, res, next) => {

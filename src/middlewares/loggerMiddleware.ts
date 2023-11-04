@@ -1,6 +1,6 @@
 import { ErrorRequestHandler, RequestHandler } from 'express'
+import { HttpCodeError } from '../configs/error'
 import { TLocal } from '../types'
-import { HttpCodeError } from '../utils/error'
 
 export default class LoggerMiddleware {
   requestLog: RequestHandler<unknown, unknown, unknown, unknown, TLocal> = (req, res, next) => {

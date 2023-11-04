@@ -1,20 +1,16 @@
+import { BadRequest400Error, Conflict409Error } from '../../configs/error'
 import { TUserRepository } from '../../repositories/User'
-import { hashPassword, signJWT, verifyPassword } from '../../utils'
-import { BadRequest400Error, Conflict409Error } from '../../utils/error'
-import { Validatestr } from '../../utils/validator'
+import { signJWT, verifyPassword } from '../../utils'
+import { createUserValidator, loginValidator } from '../../utils/Validator'
 import { TAuthService } from './Auth.type'
 export default class AuthService implements TAuthService {
   constructor(private repo: TUserRepository) {}
 
   createUser: TAuthService['createUser'] = async (createUserData) => {
-    const { name, username, password } = createUserData
-    const validatedUserData = {
-      name: new Validatestr(name, 'name').notEmpty().length(0).value(),
-      username: new Validatestr(username, 'username').notEmpty().length(0).value(),
-      password: hashPassword(new Validatestr(password, 'password').notEmpty().length(0).value()),
-    }
+    const validatedUserData = createUserValidator(createUserData)
+
     const duplicate = await this.repo.getOneByUsername(validatedUserData.username)
-    if (duplicate) throw new Conflict409Error('Duplicate data')
+    if (duplicate) throw new Conflict409Error('This username aleady exist.')
 
     const newUser = await this.repo.create(validatedUserData)
 
@@ -22,17 +18,15 @@ export default class AuthService implements TAuthService {
   }
 
   login: TAuthService['login'] = async (loginBody) => {
-    const { username, password } = loginBody
-    const validatedLoginBody = {
-      username: new Validatestr(username, 'username').notEmpty().length(0).value(),
-      password: new Validatestr(password, 'password').notEmpty().length(0).value(),
-    }
+    const validatedLoginBody = loginValidator(loginBody)
+
     const user = await this.repo.getOneByUsername(validatedLoginBody.username)
     if (!user) throw new BadRequest400Error('Invalid username or password')
 
-    if (!verifyPassword(password, user.password)) {
+    if (!verifyPassword(validatedLoginBody.password, user.password)) {
       throw new BadRequest400Error('Invalid username or password')
     }
+
     return signJWT({ id: user.id })
   }
 
