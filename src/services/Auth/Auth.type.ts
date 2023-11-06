@@ -6,4 +6,5 @@ export type TAuthService = {
   createUser: (createUserData: TCreateUserDTO) => Promise<TUser>
   login: (loginBody: TLoginDTO) => Promise<TCredentialDTO>
   getMyDetail: (locals: TCredential) => Promise<TUser>
+  getUserDetail: (username: string) => Promise<TUser>
 }

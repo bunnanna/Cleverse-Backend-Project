@@ -18,3 +18,5 @@ export const createUserValidator = (createUserData: TCreateUserDTO): TCreateUser
     password: hashPassword(new Validatestr(password, 'password').notEmpty().length(0).value()),
   }
 }
+
+export const usernameValidator = (username: string) => new Validatestr(username, 'username').notEmpty().value()

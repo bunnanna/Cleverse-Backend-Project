@@ -11,5 +11,6 @@ const authController = new AuthController(authService)
 const userRouter = express.Router()
 
 userRouter.post('/', authController.createUser)
+userRouter.get('/:username', authController.getUserDetail)
 
 export default userRouter

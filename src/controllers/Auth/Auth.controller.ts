@@ -6,7 +6,7 @@ export default class AuthController implements TAuthController {
   createUser: TAuthController['createUser'] = async (req, res) => {
     const createUserBody = req.body
     const newUser = await this.service.createUser(createUserBody)
-    res.status(201).json(newUser)
+    res.status(201).json(newUser).end()
   }
   login: TAuthController['login'] = async (req, res) => {
     const loginBody = req.body
@@ -17,6 +17,11 @@ export default class AuthController implements TAuthController {
   me: TAuthController['me'] = async (req, res) => {
     const { credential } = res.locals
     const user = await this.service.getMyDetail(credential)
+    return res.status(200).json(user).end()
+  }
+  getUserDetail: TAuthController['getUserDetail'] = async (req, res) => {
+    const { username } = req.params
+    const user = await this.service.getUserDetail(username)
     return res.status(200).json(user).end()
   }
 }

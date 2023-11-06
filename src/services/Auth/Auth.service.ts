@@ -1,7 +1,7 @@
-import { BadRequest400Error, Conflict409Error } from '../../configs/error'
+import { BadRequest400Error, Conflict409Error, NotFound404Error } from '../../configs/error'
 import { TUserRepository } from '../../repositories/User'
 import { signJWT, verifyPassword } from '../../utils'
-import { createUserValidator, loginValidator } from '../../utils/Validator'
+import { createUserValidator, loginValidator, usernameValidator } from '../../utils/Validator'
 import { TAuthService } from './Auth.type'
 export default class AuthService implements TAuthService {
   constructor(private repo: TUserRepository) {}
@@ -34,6 +34,12 @@ export default class AuthService implements TAuthService {
     const { id } = credential
 
     const user = await this.repo.getOne(id)
+    return user
+  }
+  getUserDetail: TAuthService['getUserDetail'] = async (username) => {
+    const result = await this.repo.getOneByUsername(usernameValidator(username))
+    if (!result) throw new NotFound404Error('username not found.')
+    const { password, ...user } = result
     return user
   }
 }
