@@ -4,9 +4,7 @@ import { TLocal } from '../types'
 
 export default class LoggerMiddleware {
   requestLog: RequestHandler<unknown, unknown, unknown, unknown, TLocal> = (req, res, next) => {
-    console.log(
-      `${req.method}\t${req.path}\t${res?.locals?.credential?.id || '00000000000'}\t${new Date().toISOString()}`,
-    )
+    console.log(`${req.method}\t${req.path}\t${res?.locals?.credential?.id || null}\t${new Date().toISOString()}`)
     next()
   }
 
