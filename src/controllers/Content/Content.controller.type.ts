@@ -1,11 +1,12 @@
 import { RequestHandler } from 'express'
 import { TContentDTO, TCreateContentDTO, TUpdateContentDTO } from '../../dto'
 import { TLocal } from '../../types'
+import { TEmptyParam, TIdParam } from '../utils'
 
 export type TContentController = {
-  getAll: RequestHandler<{}, TContentDTO[]>
-  getOne: RequestHandler<{ id: string }, TContentDTO>
-  create: RequestHandler<{}, TContentDTO, TCreateContentDTO, unknown, TLocal>
-  update: RequestHandler<{ id: string }, TContentDTO, TUpdateContentDTO, unknown, TLocal>
-  delete: RequestHandler<{ id: string }, TContentDTO, TCreateContentDTO, unknown, TLocal>
+  getAll: RequestHandler<TEmptyParam, TContentDTO[]>
+  getOne: RequestHandler<TIdParam, TContentDTO>
+  create: RequestHandler<TEmptyParam, TContentDTO, TCreateContentDTO, unknown, TLocal>
+  update: RequestHandler<TIdParam, TContentDTO, TUpdateContentDTO, unknown, TLocal>
+  delete: RequestHandler<TIdParam, TContentDTO, TCreateContentDTO, unknown, TLocal>
 }
