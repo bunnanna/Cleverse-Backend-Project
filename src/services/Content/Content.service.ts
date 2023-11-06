@@ -25,7 +25,7 @@ export default class ContentService implements TContentService {
 
   private getVideoData = async (videoUrl: string) => {
     const videoData: TNoembedDTO = await fetch(`https://noembed.com/embed?url=${videoUrl}`)
-      .then((res) => res.json())
+      .then((result) => result.json())
       .catch(() => {
         throw new BadRequest400Error('Can not find video.')
       })
