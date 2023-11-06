@@ -54,7 +54,7 @@ export default class ContentService implements TContentService {
 
     if (!content) throw new NotFound404Error('content not found')
 
-    if (content.postBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
+    if (content.postedBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
 
     const updatedContent = await this.repo.update(contentIdNum, updateContentValidator(updateBody))
     return updatedContent
@@ -63,7 +63,7 @@ export default class ContentService implements TContentService {
     const validatedContentId = contentIdValidator(contentId)
     const content = await this.repo.getOne(validatedContentId)
     if (!content) throw new NotFound404Error('content not found')
-    if (content.postBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
+    if (content.postedBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
     const deletedContent = await this.repo.delete(validatedContentId)
     return deletedContent
   }

@@ -16,7 +16,7 @@ export const SELECT_CONTENT: Prisma.ContentSelect = {
   thumbnailUrl: true,
   creatorName: true,
   creatorUrl: true,
-  postBy: {
+  postedBy: {
     select: SELECT_USER,
   },
   createdAt: true,

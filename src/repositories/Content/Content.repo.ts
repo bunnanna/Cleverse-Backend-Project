@@ -18,7 +18,7 @@ export default class ContentRepository implements TContentRepository {
         ...contentData,
         createdAt: currentTime,
         updatedAt: currentTime,
-        postBy: { connect: { id: ownerId } },
+        postedBy: { connect: { id: ownerId } },
       },
       select: SELECT_CONTENT,
     })

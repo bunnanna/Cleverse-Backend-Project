@@ -9,7 +9,7 @@ export type TContentDTO = {
   thumbnailUrl: string
   createdAt: Date
   updatedAt: Date
-  postBy: TUserDTO
+  postedBy: TUserDTO
 }
 
 export type TContentsDTO = TContentDTO[]
