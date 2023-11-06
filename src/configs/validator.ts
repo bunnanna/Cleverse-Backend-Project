@@ -3,45 +3,50 @@ export class ValidationError extends Error {
   readonly statuscode: number = 400
 }
 export class Validatestr {
-  private str: string
-  constructor(str: string, private name: string = 'String') {
-    if (str !== '' && !str) throw new ValidationError(`${this.name} field is required`)
-    this.str = `${str}`
-  }
+  private cb: any[] = []
+  constructor(private name: string) {}
   notEmpty() {
-    if (this.str.length === 0) throw new ValidationError(`${this.name} can not be empty.`)
+    this.cb.push((str: string) => {
+      if (str.length === 0) throw new ValidationError(`${this.name} can not be empty.`)
+    })
     return this
   }
   length(min: number, max?: number) {
-    if (this.str.length < min) throw new ValidationError(`${this.name} can not shorter than ${min}`)
-    if (max && this.str.length > max) throw new ValidationError(`${this.name} can not longer than ${max}`)
+    this.cb.push((str: string) => {
+      if (str.length < min) throw new ValidationError(`${this.name} can not shorter than ${min}`)
+      if (max && str.length > max) throw new ValidationError(`${this.name} can not longer than ${max}`)
+    })
     return this
   }
-  value() {
-    return this.str
+  apply(str: string) {
+    if (str !== '' && !str) throw new ValidationError(`${this.name} field is required`)
+    str = `${str}`
+    this.cb.forEach((cb) => cb(str))
+    return str
   }
 }
 
 export class Validatenum {
-  private num: number
-  constructor(num: number | string, private name: string = 'Number') {
-    if (num !== 0 && !num) throw new ValidationError(`${this.name} required`)
-    this.num = +num
-  }
+  private cb: any[] = []
+  constructor(private name: string) {}
   notZero() {
-    if (this.num === 0) throw new ValidationError(`${this.name} can not be 0.`)
+    this.cb.push((num: number) => {
+      if (num === 0) throw new ValidationError(`${this.name} can not be 0.`)
+    })
     return this
   }
   between(min: number, max?: number) {
-    if (this.num < min) throw new ValidationError(`${this.name} can not less than ${min}`)
-    if (max && this.num > max) throw new ValidationError(`${this.name} can not more than ${max}`)
+    this.cb.push((num: number) => {
+      if (num < min) throw new ValidationError(`${this.name} can not less than ${min}`)
+      if (max && num > max) throw new ValidationError(`${this.name} can not more than ${max}`)
+    })
     return this
   }
-  value() {
-    return this.num
-  }
-  toString() {
-    return `${this.num}`
+  apply(num: any): number {
+    if (num !== 0 && !num) throw new ValidationError(`${this.name} field required`)
+    num = +num
+    this.cb.forEach((cb) => cb(num))
+    return num
   }
 }
 

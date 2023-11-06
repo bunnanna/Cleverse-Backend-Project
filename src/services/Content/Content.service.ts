@@ -2,15 +2,12 @@ import { BadRequest400Error, Forbidden403Error, NotFound404Error } from '../../c
 import { TNoembedDTO } from '../../dto'
 import { TContentRepository } from '../../repositories/Content'
 import { TCreateContentData } from '../../types'
-import {
-  contentIdValidator,
-  createContentValidator,
-  updateContentValidator,
-  videoDataValidator,
-} from '../../utils/Validator'
+import { ContentValidator } from '../../utils/Validator'
+
 import { TContentService } from './Content.service.type'
 
 export default class ContentService implements TContentService {
+  private validator = new ContentValidator()
   constructor(private repo: TContentRepository) {}
 
   getAll: TContentService['getAll'] = () => {
@@ -18,7 +15,7 @@ export default class ContentService implements TContentService {
   }
 
   getOne: TContentService['getOne'] = async (contentId) => {
-    const content = await this.repo.getOne(contentIdValidator(contentId))
+    const content = await this.repo.getOne(this.validator.contentIdValidator(contentId))
     if (!content) throw new NotFound404Error('Content Not Found')
     return content
   }
@@ -30,11 +27,11 @@ export default class ContentService implements TContentService {
         throw new BadRequest400Error('Can not find video.')
       })
 
-    return videoDataValidator(videoData)
+    return this.validator.videoDataValidator(videoData)
   }
 
   create: TContentService['create'] = async (createBody, credential) => {
-    const validatedCreateBody = createContentValidator(createBody)
+    const validatedCreateBody = this.validator.createContentValidator(createBody)
     const videoData = await this.getVideoData(validatedCreateBody.videoUrl).catch(() => {
       throw new NotFound404Error('Cannot get Video Data')
     })
@@ -48,7 +45,7 @@ export default class ContentService implements TContentService {
     return newContent
   }
   update: TContentService['update'] = async (contentId, updateBody, credential) => {
-    const contentIdNum = contentIdValidator(contentId)
+    const contentIdNum = this.validator.contentIdValidator(contentId)
 
     const content = await this.repo.getOne(contentIdNum)
 
@@ -56,15 +53,21 @@ export default class ContentService implements TContentService {
 
     if (content.postedBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
 
-    const updatedContent = await this.repo.update(contentIdNum, updateContentValidator(updateBody))
+    const updatedContent = await this.repo
+      .update(contentIdNum, this.validator.updateContentValidator(updateBody))
+      .catch(() => {
+        throw new NotFound404Error('Can not update data')
+      })
     return updatedContent
   }
   delete: TContentService['delete'] = async (contentId, credential) => {
-    const validatedContentId = contentIdValidator(contentId)
+    const validatedContentId = this.validator.contentIdValidator(contentId)
     const content = await this.repo.getOne(validatedContentId)
     if (!content) throw new NotFound404Error('content not found')
     if (content.postedBy.id !== credential.id) throw new Forbidden403Error('The content is not yours')
-    const deletedContent = await this.repo.delete(validatedContentId)
+    const deletedContent = await this.repo.delete(validatedContentId).catch(() => {
+      throw new NotFound404Error('Can not delete data')
+    })
     return deletedContent
   }
 }
