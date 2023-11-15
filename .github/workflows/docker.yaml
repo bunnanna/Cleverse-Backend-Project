@@ -6,6 +6,8 @@ jobs:
     steps:
       - name: Echo Hello world
         run: echo "Hello World"
+      - name: checkout
+        uses: actions/checkout@v4
       - name: Echo where
         run: pwd
       - name: Echo dir
