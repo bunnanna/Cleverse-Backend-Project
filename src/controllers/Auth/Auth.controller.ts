@@ -14,6 +14,11 @@ export default class AuthController implements TAuthController {
     const credential = await this.service.login(loginBody)
     return res.status(200).json(credential).end()
   }
+  logout: TAuthController['logout'] = async (req, res) => {
+    const { credential } = res.locals
+    await this.service.logout(credential.id, credential.exp || 10000000000)
+    return res.status(200).json({ message: 'Logout complete' }).end()
+  }
   me: TAuthController['me'] = async (req, res) => {
     const { credential } = res.locals
     const user = await this.service.getMyDetail(credential)
