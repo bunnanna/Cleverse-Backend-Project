@@ -1,11 +1,15 @@
 import { BadRequest400Error, Conflict409Error, NotFound404Error } from '../../configs/error'
+import { BacklistRepository } from '../../repositories/Backlist/Backlist.repo'
 import { TUserRepository } from '../../repositories/User'
 import { signJWT, verifyPassword } from '../../utils'
 import { AuthValidator } from '../../utils/Validator'
 import { TAuthService } from './Auth.type'
 export default class AuthService implements TAuthService {
   private validator = new AuthValidator()
-  constructor(private repo: TUserRepository) {}
+  constructor(private repo: TUserRepository, private blacklist: BacklistRepository) {}
+  logout: TAuthService['logout'] = async (token, exp) => {
+    this.blacklist.addToBacklist(token, new Date(exp))
+  }
 
   createUser: TAuthService['createUser'] = async (createUserData) => {
     const validatedUserData = this.validator.createUserValidator(createUserData)

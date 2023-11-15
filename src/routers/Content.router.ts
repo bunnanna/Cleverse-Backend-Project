@@ -1,5 +1,5 @@
 import express from 'express'
-import client from '../configs/db'
+import { client } from '../configs/db'
 import ContentController from '../controllers/Content'
 import { authProtect } from '../middlewares'
 import ContentRepository from '../repositories/Content'

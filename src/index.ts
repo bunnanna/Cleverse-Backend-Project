@@ -1,5 +1,6 @@
 import express from 'express'
 import 'express-async-errors'
+
 import { PORT } from './configs'
 import { configedCors, errorHandler, jwtMiddleware, logger } from './middlewares'
 import authRouter from './routers/Auth.router'

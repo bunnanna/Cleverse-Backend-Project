@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-
-const client = new PrismaClient()
-
-export default client
+import { RedisClientType, createClient } from 'redis'
+export const client = new PrismaClient()
+export const redis: RedisClientType = createClient()
