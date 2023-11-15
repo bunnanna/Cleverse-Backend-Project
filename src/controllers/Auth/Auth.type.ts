@@ -1,7 +1,12 @@
-import { RequestHandler } from "express";
-import { TUser } from "../../types/user";
-import { TCreateUserDTO, TLoginDTO } from "../../dto";
+import { RequestHandler } from 'express'
+import { TCreateUserDTO, TCredentialDTO, TErrorDTO, TLoginDTO } from '../../dto'
+import { TLocal, TUser } from '../../types'
+import { TEmptyParam, TUsernameParam } from '../utils'
 
 export type TAuthController = {
-	createUser: RequestHandler<{}, TUser, TCreateUserDTO>;
-};
+  createUser: RequestHandler<TEmptyParam, TUser, TCreateUserDTO>
+  login: RequestHandler<TEmptyParam, TCredentialDTO, TLoginDTO>
+  logout: RequestHandler<TEmptyParam, TErrorDTO, unknown, unknown, TLocal>
+  me: RequestHandler<TEmptyParam, TUser, unknown, unknown, TLocal>
+  getUserDetail: RequestHandler<TUsernameParam, TUser>
+}

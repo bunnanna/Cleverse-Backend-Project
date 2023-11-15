@@ -1,48 +1,52 @@
-import { TCreateUserDTO, TCredentialDTO, TLoginDTO } from "../../dto";
-import { TUserRepository } from "../../repositories/User";
-import { verifyPassword } from "../../utils/bcrypt";
-import { TAuthService } from "./Auth.type";
-
+import { BadRequest400Error, Conflict409Error, NotFound404Error } from '../../configs/error'
+import { BacklistRepository } from '../../repositories/Backlist/Backlist.repo'
+import { TUserRepository } from '../../repositories/User'
+import { signJWT, verifyPassword } from '../../utils'
+import { AuthValidator } from '../../utils/Validator'
+import { TAuthService } from './Auth.type'
 export default class AuthService implements TAuthService {
-	constructor(private repo: TUserRepository) {}
-	private validateCreateUser = (createUserData: TCreateUserDTO) => {
-		const { name, username, password } = createUserData;
-		if (!name || name.length === 0) throw new Error("name field required");
-		if (!username || username.length === 0)
-			throw new Error("username field required");
-		if (!password || password.length === 0)
-			throw new Error("password field required");
-		return { name, username, password };
-	};
-	createUser: TAuthService["createUser"] = async (createUserData) => {
-		const validatedUserData = this.validateCreateUser(createUserData);
+  private validator = new AuthValidator()
+  constructor(private repo: TUserRepository, private blacklist: BacklistRepository) {}
+  logout: TAuthService['logout'] = async (token, exp) => {
+    this.blacklist.addToBacklist(token, new Date(exp))
+  }
 
-		const newUser = await this.repo.create(validatedUserData);
+  createUser: TAuthService['createUser'] = async (createUserData) => {
+    const validatedUserData = this.validator.createUserValidator(createUserData)
 
-		return newUser;
-	};
+    const duplicate = await this.repo.getOneByUsername(validatedUserData.username)
+    if (duplicate) throw new Conflict409Error('This username aleady exist.')
 
-	private validateLogin = (loginBody: TLoginDTO) => {
-		const { username, password } = loginBody;
-		if (!username || username.length === 0)
-			throw new Error("username field required");
-		if (!password || password.length === 0)
-			throw new Error("password field required");
-		return { username, password };
-	};
-	login: TAuthService["login"] = async (loginBody) => {
-		const { username, password } = await this.validateLogin(loginBody);
-		const user = await this.repo.getOneByUsername(username).catch(() => {
-			throw new Error("Invalid username or password");
-		});
-		if (!verifyPassword(password, user.password)) {
-			throw new Error("Invalid username or password");
-		}
-		// TODO JWT
-		return { accessToken: "sfmd;smcs" };
-	};
+    const newUser = await this.repo.create(validatedUserData)
 
-	// getMyDetail:TAuthService= (credential: TCredentialDTO)=>{
+    return newUser
+  }
 
-	// }
+  login: TAuthService['login'] = async (loginBody) => {
+    const validatedLoginBody = this.validator.loginValidator(loginBody)
+
+    const user = await this.repo.getOneByUsername(validatedLoginBody.username)
+    if (!user) throw new BadRequest400Error('Invalid username or password')
+
+    if (!verifyPassword(validatedLoginBody.password, user.password)) {
+      throw new BadRequest400Error('Invalid username or password')
+    }
+
+    return signJWT({ id: user.id })
+  }
+
+  getMyDetail: TAuthService['getMyDetail'] = async (credential) => {
+    const { id } = credential
+
+    const user = await this.repo.getOne(id).catch(() => {
+      throw new NotFound404Error('Can not get data')
+    })
+    return user
+  }
+  getUserDetail: TAuthService['getUserDetail'] = async (username) => {
+    const result = await this.repo.getOneByUsername(this.validator.usernameValidator(username))
+    if (!result) throw new NotFound404Error('username not found.')
+    const { password, ...user } = result
+    return user
+  }
 }

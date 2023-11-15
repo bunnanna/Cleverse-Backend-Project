@@ -1,8 +1,8 @@
 export type TLoginDTO = {
-	username: string;
-	password: string;
-};
+  username: string
+  password: string
+}
 
 export type TCredentialDTO = {
-	accessToken: string;
-};
+  accessToken: string
+}

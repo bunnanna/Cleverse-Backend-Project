@@ -1,3 +1,3 @@
-import { TUserDTO } from "../dto";
+import { TUserDTO } from '../dto'
 
-export type TUser = Omit<TUserDTO, "registeredAt"> & { registeredAt: Date };
+export type TUser = Omit<TUserDTO, 'registeredAt'> & { registeredAt: Date }
