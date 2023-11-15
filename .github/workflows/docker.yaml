@@ -6,3 +6,7 @@ jobs:
     steps:
       - name: Echo Hello world
         run: echo "Hello World"
+      - name: Echo where
+        run: pwd
+      - name: Echo dir
+        run: ls -lah
