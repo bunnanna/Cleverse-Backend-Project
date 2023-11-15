@@ -15,7 +15,7 @@ RUN ls -lah
 
 FROM node:18-alpine
 
-ENV NODE_ENV=production PORT=8081
+ENV NODE_ENV=production PORT=8080
 
 WORKDIR /app
 
